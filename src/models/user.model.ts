@@ -13,8 +13,13 @@ const userSchema: Schema<IUser> = new Schema({
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
         'Please enter a valid email address'
     ],
-    phone:{type: String, required:false},
-    imgUrl: {type: String}
+ 
    },
-   password:{type: String , required:[true,"Please enter a Password"]}
+  phone:{type: String, required:false},
+  imgUrl: {type: String},
+  password:{type: String , required:[true,"Please enter a Password"]}
 });
+
+
+const User = mongoose.model<IUser>("user", userSchema);
+export default User;

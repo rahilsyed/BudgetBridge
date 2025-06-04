@@ -13,7 +13,7 @@ const api_routes_1 = __importDefault(require("./routes/api.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const NAMESPACE = "Server";
-//Database connection
+//Database connection 
 (0, db_config_1.default)();
 app.set("view engine", "ejs");
 app.use((0, cors_1.default)());
@@ -35,10 +35,11 @@ app.use((req, res, next) => {
     });
     next();
 });
-app.use("/api/", api_routes_1.default);
-app.get("/", (req, res) => {
-    console.log("api working");
-});
+app.use("/api", api_routes_1.default);
+// app.get("/",(req:Request, res:Response)=>{
+//     console.log("api working");
+// })
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);
 });
+//# sourceMappingURL=index.js.map

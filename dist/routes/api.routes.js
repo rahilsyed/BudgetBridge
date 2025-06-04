@@ -8,3 +8,4 @@ const user_route_1 = __importDefault(require("./user.route"));
 const app = (0, express_1.default)();
 app.use("/user", user_route_1.default);
 exports.default = app;
+//# sourceMappingURL=api.routes.js.map

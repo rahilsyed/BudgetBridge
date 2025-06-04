@@ -40,3 +40,4 @@ module.exports = {
     warn,
     error
 };
+//# sourceMappingURL=logging.config.js.map

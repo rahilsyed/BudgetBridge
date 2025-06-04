@@ -19,3 +19,4 @@ const connectToDB = () => {
     });
 };
 exports.default = connectToDB;
+//# sourceMappingURL=db.config.js.map
