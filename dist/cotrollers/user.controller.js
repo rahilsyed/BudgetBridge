@@ -8,16 +8,16 @@ const utils_helper_1 = __importDefault(require("../helpers/utils.helper"));
 const api_response_helper_1 = require("../helpers/api_response.helper");
 const user_model_1 = __importDefault(require("../models/user.model"));
 const register = async (req, res) => {
+    const { firstName, lastName, email, phone, imgUrl } = req.body;
     try {
-        const { firstName, lastName, email, phone, imgUrl, password } = req.body;
-        console.log("body", req.body);
-        if (!firstName || !lastName || !email || !phone || !password) {
+        if (!firstName || !lastName || !email || !phone) {
             return (0, api_response_helper_1.validationError)(res, 'Missing required fields');
         }
         const userExists = await user_model_1.default.findOne({ $or: [{ email }, { phone }] });
         if (userExists) {
-            return (0, api_response_helper_1.validationError)(res, `User with this email:${email || phone} already exist`);
+            return (0, api_response_helper_1.validationError)(res, `User with  ${email} or ${phone} already exist`);
         }
+        const password = utils_helper_1.default.generatePassword();
         const encryptedPassword = await bcryptjs_1.default.hash(password, 10);
         let newUser = new user_model_1.default({
             firstName,
@@ -27,9 +27,9 @@ const register = async (req, res) => {
             imgUrl,
             password: encryptedPassword,
         });
-        console.log(newUser);
-        console.log(newUser.phone);
         await newUser.save();
+        const userData = { firstName, lastName, email, password };
+        utils_helper_1.default.sendEmail(email, 'Greetings!', userData);
         return (0, api_response_helper_1.successResponse)(res, 'User Added Successfully', newUser);
     }
     catch (err) {

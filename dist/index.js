@@ -12,10 +12,10 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const api_routes_1 = __importDefault(require("./routes/api.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const NAMESPACE = "Server";
-//Database connection 
+const NAMESPACE = 'Server';
+//Database connection
 (0, db_config_1.default)();
-app.set("view engine", "ejs");
+app.set('view engine', 'ejs');
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -24,7 +24,7 @@ app.use((0, express_fileupload_1.default)({
     tempFileDir: '/tmp',
     limits: { fileSize: 5000000 }, //5mb
     abortOnLimit: true,
-    responseOnLimit: "File size must be 5mb or less"
+    responseOnLimit: 'File size must be 5mb or less',
 }));
 app.use((req, res, next) => {
     //log the req
@@ -35,7 +35,7 @@ app.use((req, res, next) => {
     });
     next();
 });
-app.use("/api", api_routes_1.default);
+app.use('/api', api_routes_1.default);
 // app.get("/",(req:Request, res:Response)=>{
 //     console.log("api working");
 // })
