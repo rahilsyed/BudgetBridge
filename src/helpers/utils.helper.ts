@@ -65,9 +65,18 @@ const sendEmail = async (to:string, subject: string , user: User)=>{
 }
 
 
+const generatePassword = ()=>{
+  const possible ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdfghijklmnopqrstuvwxyz1234567890';
+  let password='';
+  for(let i=0;i<8;i++){
+    password+= possible.charAt(Math.floor(Math.random()*possible.length))
+  }
+  return password;
+}
 
 export default {
     getUserId,
     generateToken,
-    sendEmail
+    sendEmail,
+    generatePassword
 }
