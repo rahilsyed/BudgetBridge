@@ -25,14 +25,14 @@ const getUserId =(req:Request)=>{
         let userId = decodded._id;
         return userId;
     }
-}
+};
 
 const generateToken =(user: any)=>{
     let JwtPayload = user.toJSON();
     const secret = process.env.JWT_SECRET!;
     let token = jwt.sign(JwtPayload, secret);
     return token;
-}
+};
 
 const sendEmail = async (to:string, subject: string , user: User)=>{
     let transporter = nodemailer.createTransport({
@@ -62,7 +62,7 @@ const sendEmail = async (to:string, subject: string , user: User)=>{
     subject: subject,
     html: template,
   });
-}
+};
 
 
 const generatePassword = ()=>{
@@ -72,11 +72,25 @@ const generatePassword = ()=>{
     password+= possible.charAt(Math.floor(Math.random()*possible.length))
   }
   return password;
-}
+};
+
+
+
+const uploadToCloudinary =async(imagePath: string, folder: string,)=>{
+  const folderPath = `${folder}/${process.env.CLOUDINARY_FOLDER}`;
+  const result = await cloudinary.v2.uploader.upload(imagePath, {
+    resource_type: 'auto',
+    folder: folderPath,
+    transformation: [{width: 800, height:600, crop: 'limit'},{quality: 'auto'}]
+  });
+  return result.secure_url;
+};
+
 
 export default {
-    getUserId,
-    generateToken,
-    sendEmail,
-    generatePassword
+  getUserId,
+  generateToken,
+  sendEmail,
+  generatePassword,
+  uploadToCloudinary
 }

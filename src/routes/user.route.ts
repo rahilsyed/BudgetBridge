@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import userController from '../cotrollers/user.controller';
-
+import { register, login, resetPassword, getUserInfo } from '../cotrollers/user.controller';
+import { authenticate } from '../middleware/authenticate.middleware';
 const router = Router();
 
-router.post('/register', userController.register);
-router.post('/login', userController.login);
-router.post('/resetpassword', userController.resetPassword);
+router.post('/register', register);
+router.post('/login', login);
+router.put('/resetpassword', resetPassword);
+router.get('/userInfo',authenticate, getUserInfo)
 export default router;
