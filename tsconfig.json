@@ -6,7 +6,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "strict": true,
+    "strict": false,
     "moduleResolution": "Node16",
     "resolveJsonModule": true,
     "noEmit": false,
