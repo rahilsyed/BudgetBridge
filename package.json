@@ -9,7 +9,7 @@
     "dev": "npm run build && ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "rm -rf build && tsc"
   },
-  "author": "",
+  "author": "Saiyed Rahil",
   "license": "ISC",
   "devDependencies": {
     "@types/ejs": "^3.1.5",
