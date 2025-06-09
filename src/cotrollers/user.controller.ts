@@ -11,7 +11,6 @@ import {
 } from '../helpers/api_response.helper';
 import User from '../models/user.model';
 import { WelcomeEmailData } from '../types/user.types';
-import { profile } from 'console';
 
 export const register = async (req: Request, res: Response) => {
   const { firstName, lastName, email, phone } = req.body;
@@ -29,15 +28,12 @@ export const register = async (req: Request, res: Response) => {
       );
     }
     let image = req.files?.img as UploadedFile;
-console.log(image.tempFilePath)
     let uploadedImageUrl = '';
       if (image) {
-      // imgFile is either a single file or an array (if multiple)
       const filePath = image.tempFilePath;
       uploadedImageUrl = await utils.uploadToCloudinary(filePath, 'profilePhoto');
     }
     console.log(uploadedImageUrl)
-    // console.log("uploadedImageUrl", uploadedImageUrl)
     const password = utils.generatePassword();
     const encryptedPassword = await bcrypt.hash(password, 10);
 
@@ -54,7 +50,7 @@ console.log(image.tempFilePath)
 
     const userData: WelcomeEmailData = { firstName, lastName, email, password };
 
-    utils.sendEmail(email, 'Greetings!', userData);
+    await utils.sendEmail(email, 'Greetings!', userData);
     return successResponse(res, 'User Added Successfully', newUser);
   } catch (err: any) {
     return errorResponse(res, err.message);
@@ -64,7 +60,6 @@ console.log(image.tempFilePath)
 export const login = async (req: Request, res: Response) => {
   try {
     const { userName, password } = req.body;
-    console.log(req.body);
     if (!userName || !password) {
       return validationError(res, 'Missing required fields');
     }
@@ -76,7 +71,6 @@ export const login = async (req: Request, res: Response) => {
       return unauthorizedResponse(res, 'User Not Found in database');
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log(isPasswordValid);
     if (!isPasswordValid) {
       return validationError(res, 'Incorrect password!!!');
     }
