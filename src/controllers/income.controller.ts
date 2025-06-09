@@ -11,10 +11,8 @@ import xlsx from 'xlsx';
 const addIncome = async (req: Request, res: Response) => {
   const { icon, source, amount, date } = req.body;
   try {
-    console.log('data', source, amount, icon, date);
     const userId = utils.getUserId(req);
-    console.log(userId);
-    if (!source || !amount) {
+      if (!source || !amount) {
       return validationError(res, 'all fields are required');
     }
 
@@ -26,7 +24,6 @@ const addIncome = async (req: Request, res: Response) => {
       amount,
       date: incomeDate,
     });
-    console.log(newIncome);
     await newIncome.save();
     return successResponse(res, 'Income Added successfully', newIncome);
   } catch (error) {
@@ -53,7 +50,7 @@ const getAllIncomes = async (req: Request, res: Response) => {
 }
 };
 const deleteIncome = async (req: Request, res: Response) => {
-  const { incomeId } = req.body;
+  const incomeId  = req.params.id;
     try {
         if(!incomeId){
             return validationError(res, 'Missing required fields to delete an income')

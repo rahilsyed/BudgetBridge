@@ -1,8 +1,5 @@
 import { ObjectId } from 'mongoose';
 
-
-
-
 export default interface IIncome {
     _id:ObjectId;
     userId:ObjectId;
