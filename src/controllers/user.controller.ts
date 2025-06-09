@@ -128,3 +128,26 @@ return successResponse(res, 'User details found successfully', user)
     return errorResponse(res, error.message);
   }
 }
+
+
+export const forgetPassword = async (req:Request, res:Response)=>{
+  const {email }= req.body;
+try {
+  const userExists = await User.findOne({email});
+  if(!userExists){
+    return validationError(res, 'User with this email does not existes');
+  }
+  const newPassword = utils.generatePassword();
+  const encryptedPassword = await bcrypt.hash(newPassword, 10);
+  await User.findOneAndUpdate({email}, {$set:{password: encryptedPassword}});
+
+  const userData ={ firstName : userExists.firstName, lastName:userExists.lastName, email, password: newPassword};
+
+
+  await utils.sendEmail(userExists.email, "Your New Password Arrived", userData);
+
+  return successResponse(res, 'Password Arrived on email', userData);
+} catch (error) {
+  
+}
+}
