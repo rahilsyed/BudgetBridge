@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import utils from '../helpers/utils.helper';
 import { Request, Response } from 'express';
-import {UploadedFile} from 'express-fileupload'
+import { UploadedFile } from 'express-fileupload';
 import {
   errorResponse,
   unauthorizedResponse,
@@ -12,7 +12,7 @@ import {
 import User from '../models/user.model';
 import { WelcomeEmailData } from '../types/user.types';
 
-export const register = async (req: Request, res: Response) => {
+const register = async (req: Request, res: Response) => {
   const { firstName, lastName, email, phone } = req.body;
 
   try {
@@ -29,11 +29,13 @@ export const register = async (req: Request, res: Response) => {
     }
     let image = req.files?.img as UploadedFile;
     let uploadedImageUrl = '';
-      if (image) {
+    if (image) {
       const filePath = image.tempFilePath;
-      uploadedImageUrl = await utils.uploadToCloudinary(filePath, 'profilePhoto');
+      uploadedImageUrl = await utils.uploadToCloudinary(
+        filePath,
+        'profilePhoto'
+      );
     }
-    console.log(uploadedImageUrl)
     const password = utils.generatePassword();
     const encryptedPassword = await bcrypt.hash(password, 10);
 
@@ -57,7 +59,7 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+const login = async (req: Request, res: Response) => {
   try {
     const { userName, password } = req.body;
     if (!userName || !password) {
@@ -66,7 +68,6 @@ export const login = async (req: Request, res: Response) => {
     const user = await User.findOne({
       $or: [{ email: userName }, { phone: userName }],
     });
-    console.log(user);
     if (!user) {
       return unauthorizedResponse(res, 'User Not Found in database');
     }
@@ -85,69 +86,81 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const resetPassword = async (req: Request, res: Response) => {
-  const { email, currentPassword, newPassword } = req.body;
-  try {
-    if (!email || !currentPassword || !newPassword) {
-      return validationError(res, 'Missing required fields');
-    }
 
-    const userExists = await User.findOne({ email });
+const resetPassword = async (req: Request, res: Response) => {
+  const { oldPassword, newPassword } = req.body;
+  try {
+    const userId = utils.getUserId(req);
+     const userExists = await User.findById(userId);
+
     if (!userExists) {
-      return validationError(res, 'User with this email does not exists');
+      return notFoundResponse(res, 'user not found in database');
     }
     const isPasswordValid = await bcrypt.compare(
-      currentPassword,
+      oldPassword,
       userExists.password
     );
     if (!isPasswordValid) {
-      return validationError(res, 'Passoword you entered does not match');
+      return validationError(res, 'Old password is not a valid password');
     }
-
     const encryptedPassword = await bcrypt.hash(newPassword, 10);
-    await User.findByIdAndUpdate(userExists._id, {
-      password: encryptedPassword,
-    });
-
-    return successResponse(res, 'Password reset successfully', null);
+    await User.findByIdAndUpdate(
+      {_id: userId },
+      { $set: { password: encryptedPassword } }
+    );
+    return successResponse(res, 'Password reset Successfully', null);
+  } catch (error) {
+    return errorResponse(res, error.message);
+  }
+};
+const getUserInfo = async (req: Request, res: Response) => {
+  try {
+    const userId = await utils.getUserId(req);
+    const user = await User.findById(userId).select('-password -__v -_id');
+    if (!user) {
+      return notFoundResponse(res, 'User not found');
+    }
+    return successResponse(res, 'User details found successfully', user);
   } catch (error: any) {
     return errorResponse(res, error.message);
   }
 };
 
+const forgetPassword = async (req: Request, res: Response) => {
+  const { email } = req.body;
+  try {
+    const userExists = await User.findOne({ email });
+    if (!userExists) {
+      return validationError(res, 'User with this email does not existes');
+    }
+    const newPassword = utils.generatePassword();
+    const encryptedPassword = await bcrypt.hash(newPassword, 10);
+    await User.findOneAndUpdate(
+      { email },
+      { $set: { password: encryptedPassword } }
+    );
 
-export const getUserInfo = async(req: Request, res: Response)=>{
-  try{
-    const userId = await utils.getUserId(req);
-    const user = await User.findById(userId).select('-password -__v -_id');
-    if(!user){
-    return notFoundResponse(res,'User not found');
-    } 
-return successResponse(res, 'User details found successfully', user)
-  }catch(error:any){
-    return errorResponse(res, error.message);
-  }
-}
+    const userData = {
+      firstName: userExists.firstName,
+      lastName: userExists.lastName,
+      email,
+      password: newPassword,
+    };
 
+    await utils.sendEmail(
+      userExists.email,
+      'Your New Password Arrived',
+      userData
+    );
 
-export const forgetPassword = async (req:Request, res:Response)=>{
-  const {email }= req.body;
-try {
-  const userExists = await User.findOne({email});
-  if(!userExists){
-    return validationError(res, 'User with this email does not existes');
-  }
-  const newPassword = utils.generatePassword();
-  const encryptedPassword = await bcrypt.hash(newPassword, 10);
-  await User.findOneAndUpdate({email}, {$set:{password: encryptedPassword}});
+    return successResponse(res, 'Password Arrived on email', userData);
+  } catch (error) {}
+};
 
-  const userData ={ firstName : userExists.firstName, lastName:userExists.lastName, email, password: newPassword};
-
-
-  await utils.sendEmail(userExists.email, "Your New Password Arrived", userData);
-
-  return successResponse(res, 'Password Arrived on email', userData);
-} catch (error) {
-  
-}
-}
+export default {
+  register,
+  login,
+  getUserInfo,
+  resetPassword,
+  forgetPassword,
+};

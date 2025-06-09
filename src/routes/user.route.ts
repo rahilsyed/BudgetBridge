@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import {register, login, resetPassword, getUserInfo, forgetPassword} from '../controllers/user.controller';
+import userController from '../controllers/user.controller';
 import { authenticate } from '../middleware/authenticate.middleware';
 const router = Router();
 
-router.post('/register', register as any);
-router.post('/login', login as any);
-router.put('/resetpassword', resetPassword as any);
-router.get('/userInfo',authenticate as any, getUserInfo as any);
-router.post('/forgetpassword', forgetPassword as any)
+router.post('/register', userController.register as any);
+router.post('/login', userController.login as any);
+router.put('/resetpassword', userController.resetPassword as any);
+router.get('/userInfo',authenticate as any, userController.getUserInfo as any);
+router.post('/forgetpassword', userController.forgetPassword as any)
 export default router;
