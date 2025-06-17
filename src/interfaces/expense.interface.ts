@@ -5,6 +5,6 @@ export interface IExpense {
   userId: ObjectId;
   icon: String;
   amount: Number;
-  category: String;
+  source: String;
   date: Date;
 }
