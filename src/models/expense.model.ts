@@ -15,7 +15,7 @@ const expenseSchema :Schema<IExpense>= new Schema({
         type:Number,
         required:true,
     },
-    category:{
+    source:{
         type:String,
         required: true
     },
