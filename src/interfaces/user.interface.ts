@@ -1,4 +1,4 @@
-import {Date, ObjectId } from 'mongoose';
+import { ObjectId } from 'mongoose';
 
 export default interface IUser{
     _id: ObjectId;
