@@ -5,7 +5,6 @@ import Expense from '../models/expense.model';
 import User from '../models/user.model';
 import xlsx from 'xlsx';
 const addExpense = async (req: Request, res: Response) => {
-  console.log('first');
   const { amount, source, icon, date } = req.body;
 
   try {
@@ -35,7 +34,6 @@ const addExpense = async (req: Request, res: Response) => {
 const getAllExpense = async (req: Request, res: Response) => {
   try {
      const userId = await utils.getUserId(req)
-    console.log(userId);
     const userExistes = await Expense.findOne(userId);
     if(!userExistes){
       return validationError(res, 'user does not existes in database');
