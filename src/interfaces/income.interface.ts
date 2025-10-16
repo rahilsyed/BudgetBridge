@@ -7,4 +7,7 @@ export default interface IIncome {
     source: string;
     amount: number;
     date : Date;
+    bankAccountId :ObjectId;
+    incomeType: string;
+    description: string;
 } 

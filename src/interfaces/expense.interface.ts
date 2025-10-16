@@ -7,4 +7,8 @@ export interface IExpense {
   amount: Number;
   source: String;
   date: Date;
+  bankAccountId: ObjectId;
+  description: String;
+  paymentMethod:String;
+  category: String;
 }

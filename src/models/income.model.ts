@@ -22,9 +22,26 @@ const incomeSchema: Schema<IIncome> = new Schema(
       type: Date,
       default: Date.now(),
     },
+    bankAccountId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'bankAccounts',
+      required: true,
+    },
+    incomeType: {
+      type: String,
+      required: true,
+      // enum:['Salary','SideHustle','Other']
+    },
+    description: {
+      type: String,
+      required: true,
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    collection:'income',
+  }
 );
 
 const Income = mongoose.model<IIncome>('income', incomeSchema);
-export default  Income ;
+export default Income;

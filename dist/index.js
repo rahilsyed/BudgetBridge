@@ -16,7 +16,12 @@ const NAMESPACE = 'Server';
 //Database connection
 (0, db_config_1.default)();
 app.set('view engine', 'ejs');
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:5173', // your frontend port
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, // if you're using cookies or auth headers
+}));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, express_fileupload_1.default)({
