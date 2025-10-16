@@ -7,8 +7,8 @@ const bankAccountSchema :Schema<IBankAccount> = new Schema<IBankAccount>({
     accountNumber:{
         type: Number,
         required: true,
-        min:4,
-        max:4,
+        minLength:4,
+        maxLength:4,
     },
     userId:{
         type: mongoose.Schema.Types.ObjectId,
@@ -17,7 +17,7 @@ const bankAccountSchema :Schema<IBankAccount> = new Schema<IBankAccount>({
     },
     accountType:{
         type: String,
-        enum: ['Savings', 'current', 'Salary'],
+        enum: ['Savings', 'Current', 'Salary'],
         required: true
     },
     bankName:{
