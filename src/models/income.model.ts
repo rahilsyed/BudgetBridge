@@ -17,6 +17,7 @@ const incomeSchema: Schema<IIncome> = new Schema(
     amount: {
       type: Number,
       required: true,
+      min:0
     },
     date: {
       type: Date,
@@ -36,6 +37,10 @@ const incomeSchema: Schema<IIncome> = new Schema(
       type: String,
       required: true,
     },
+    isDeleted:{
+      type: Boolean,
+      default: false,
+    }
   },
   {
     timestamps: true,

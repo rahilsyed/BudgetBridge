@@ -10,4 +10,5 @@ export default interface IIncome {
     bankAccountId :ObjectId;
     incomeType: string;
     description: string;
+    isDeleted:Boolean
 } 
