@@ -10,7 +10,7 @@ const addExpense = async (req: Request, res: Response) => {
   try {
     const userId = utils.getUserId(req);
     const userExistes = await User.findById(userId);
-    if(!userExistes){
+    if (!userExistes) {
       return validationError(res, 'User does not exists in database');
     }
     if (!amount || !source) {
@@ -33,13 +33,13 @@ const addExpense = async (req: Request, res: Response) => {
 
 const getAllExpense = async (req: Request, res: Response) => {
   try {
-     const userId = await utils.getUserId(req)
+    const userId = await utils.getUserId(req)
     const userExistes = await Expense.findOne(userId);
-    if(!userExistes){
+    if (!userExistes) {
       return validationError(res, 'user does not existes in database');
     }
     const allExpenses = await Expense.find({});
-    if(!allExpenses){
+    if (!allExpenses) {
       return notFoundResponse(res, 'No expense Found');
     }
 
@@ -51,35 +51,35 @@ const getAllExpense = async (req: Request, res: Response) => {
 
 const deleteExpense = async (req: Request, res: Response) => {
   try {
-    
-     const userId = await utils.getUserId(req)
-     const userExistes = await User.findById(userId);
-     if(!userExistes){
+
+    const userId = await utils.getUserId(req)
+    const userExistes = await User.findById(userId);
+    if (!userExistes) {
       return notFoundResponse(res, 'user does not exists in database');
-     }
-     const deleteExpense = await Expense.findByIdAndDelete(req.params.id);
-     return successResponse(res, 'Expense deleted successfully', deleteExpense);
-  } catch (error) {}
+    }
+    const deleteExpense = await Expense.findByIdAndDelete(req.params.id);
+    return successResponse(res, 'Expense deleted successfully', deleteExpense);
+  } catch (error) { }
 };
 const downloadExpense = async (req: Request, res: Response) => {
   try {
     const userId = utils.getUserId(req)
     const userExists = await User.findById(userId);
-    if(!userExists){
+    if (!userExists) {
       return validationError(res, 'User not found in the database');
     }
-    const expense = await Expense.find({userId}).sort({date:-1});
-    const data = expense.map((item)=>({
+    const expense = await Expense.find({ userId }).sort({ date: -1 });
+    const data = expense.map((item) => ({
       Source: item.source,
-      Amount : item.amount,
-      date: item.date      
+      Amount: item.amount,
+      date: item.date
     }));
     const wb = xlsx.utils.book_new();
     const ws = xlsx.utils.json_to_sheet(data);
     xlsx.utils.book_append_sheet(wb, ws, 'expense')
     xlsx.writeFile(wb, `expense-details ${userExists.firstName}.xlsx`);
     res.download(`expense-details ${userExists.firstName}.xlsx`)
-  } catch (error :any) {
+  } catch (error: any) {
     return errorResponse(res, error.message)
   }
 };

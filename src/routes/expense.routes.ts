@@ -7,9 +7,9 @@ import { authenticate } from '../middleware/authenticate.middleware';
 const router = Router();
 
 
-router.post('/add-expense', authenticate as any,expenseController.addExpense as any);
-router.get('/get-expense',authenticate as any , expenseController.getAllExpense as any);
-router.post('/download-xcel',authenticate as any, expenseController.downloadExpense as any);
-router.delete('/delete-expense/:id',authenticate as any, expenseController.deleteExpense as any);
+router.post('/add-expense', authenticate ,expenseController.addExpense );
+router.get('/get-expense',authenticate , expenseController.getAllExpense );
+router.post('/download-xcel',authenticate , expenseController.downloadExpense );
+router.delete('/delete-expense/:id',authenticate , expenseController.deleteExpense );
 
 export default router

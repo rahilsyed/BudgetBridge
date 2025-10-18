@@ -49,18 +49,18 @@ const getAccounts = async (req: Request, res: Response) => {
         const userId = utilsHelper.getUserId(req);
         const limit = parseInt(req.query.limit as string) || 5;
         const offset = parseInt(req.query.offset as string) || 0;
-        const searchTerm = req.query.search.toString().trim();
+        const searchTerm: string = req.query.search?.toString().trim();
         const query: any = {
             isDeleted: { $ne: true },
             userId
         };
+
         if (searchTerm) {
             const regex = new RegExp(searchTerm, 'i');
 
             query.$or = [
                 { bankName: regex },
                 { accountType: regex },
-                { balance: regex },
                 { accountNumber: regex },
             ]
 
@@ -68,14 +68,21 @@ const getAccounts = async (req: Request, res: Response) => {
         if (!userId) {
             return validationError(res, "User is not Valid Contact admin Support");
         }
-        const accounts = await BankAccount.find({ userId })
+        const accounts = await BankAccount.find(query)
             .limit(limit)
             .skip(offset * limit)
             .sort({ createdAt: -1 });
+
         if (accounts.length === 0) {
             return validationError(res, "No Bank Accounts found Please Add One ");
         }
-        return successResponse(res, "Accounts Fetched Successfully", accounts);
+        const totalDocs = await BankAccount.countDocuments(query)
+        return successResponse(res, "Accounts Fetched Successfully", {
+            accounts, totalDocs, pagination: {
+                offset,
+                limit
+            }
+        });
     } catch (error: any) {
         return errorResponse(res, error.message)
     }

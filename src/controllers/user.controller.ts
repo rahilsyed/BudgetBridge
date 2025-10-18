@@ -91,7 +91,7 @@ const resetPassword = async (req: Request, res: Response) => {
   const { oldPassword, newPassword } = req.body;
   try {
     const userId = utils.getUserId(req);
-     const userExists = await User.findById(userId);
+    const userExists = await User.findById(userId);
 
     if (!userExists) {
       return notFoundResponse(res, 'user not found in database');
@@ -105,7 +105,7 @@ const resetPassword = async (req: Request, res: Response) => {
     }
     const encryptedPassword = await bcrypt.hash(newPassword, 10);
     await User.findByIdAndUpdate(
-      {_id: userId },
+      { _id: userId },
       { $set: { password: encryptedPassword } }
     );
     return successResponse(res, 'Password reset Successfully', null);
@@ -154,7 +154,7 @@ const forgetPassword = async (req: Request, res: Response) => {
     );
 
     return successResponse(res, 'Password Arrived on email', userData);
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export default {

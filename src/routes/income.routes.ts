@@ -3,10 +3,10 @@ import incomeController from '../controllers/income.controller';
 import { authenticate } from '../middleware/authenticate.middleware';
 const   router = Router();
 
-router.post('/add-income', authenticate as any,incomeController.addIncome as any);
-router.get('/get-incomes',authenticate as any , incomeController.getAllIncomes as any);
-router.post('/download-xcel',authenticate as any, incomeController.downloadExcel as any);
-router.delete('/delete-income/:id',authenticate as any, incomeController.deleteIncome as any);
+router.post('/add-income', authenticate ,incomeController.addIncome );
+router.get('/get-incomes',authenticate , incomeController.getAllIncomes );
+router.post('/download-xcel',authenticate , incomeController.downloadExcel );
+router.delete('/delete-income/:id',authenticate , incomeController.deleteIncome );
 
 
 export default router;
