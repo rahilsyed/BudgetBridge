@@ -18,7 +18,9 @@ const userSchema: Schema<IUser> = new Schema({
   phone:{type: String, required:false},
   imgUrl: {type: String},
   password:{type: String , required:[true,"Please enter a Password"]}
-});
+},
+{ timestamps:true }
+);
 
 
 const User = mongoose.model<IUser>("user", userSchema);

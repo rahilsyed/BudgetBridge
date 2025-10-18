@@ -7,7 +7,7 @@ export interface IBankAccount{
     bankName: String;
     accountType: String;
     balance: Number;
-    accountNumber: Number;
+    accountNumber: String;
     isPrimary: Boolean;
     isActive:Boolean;
 }

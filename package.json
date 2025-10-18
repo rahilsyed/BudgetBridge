@@ -7,7 +7,7 @@
     "start": "npm run build && node dist/index.js",
     "postinstall": "tsc",
     "dev": "npm run build && ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "rm -rf build && tsc"
+    "build": "rimraf dist && tsc"
   },
   "author": "Saiyed Rahil",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.15.18",
     "@types/nodemailer": "^6.4.17",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },

@@ -23,16 +23,21 @@ const addAccount = async (req: Request, res: Response) => {
         if (!userId) {
             validationError(res, "User is not Valid Contact admin Support");
         }
+        const doHaveAccount = await BankAccount.findOneAndUpdate({ userId, isPrimary: true }, {
+            $set: { isPrimary: false }
+        })
+        console.log(doHaveAccount)
         const newAccount = new BankAccount({
             userId,
             bankName,
             accountType,
             accountNumber,
             balance,
-            isPrimary: false,
+            isPrimary: true,
             isActive: true
-        })
+        });
         await newAccount.save();
+
         return successResponse(res, "Account Added Successfully", newAccount);
     } catch (error: any) {
         return errorResponse(res, error.message)
@@ -42,17 +47,32 @@ const addAccount = async (req: Request, res: Response) => {
 const getAccounts = async (req: Request, res: Response) => {
     try {
         const userId = utilsHelper.getUserId(req);
-        const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
-        const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
-        // const search = req.query.search ? req.query.search as string : "";
+        const limit = parseInt(req.query.limit as string) || 5;
+        const offset = parseInt(req.query.offset as string) || 0;
+        const searchTerm = req.query.search.toString().trim();
+        const query: any = {
+            isDeleted: { $ne: true },
+            userId
+        };
+        if (searchTerm) {
+            const regex = new RegExp(searchTerm, 'i');
 
+            query.$or = [
+                { bankName: regex },
+                { accountType: regex },
+                { balance: regex },
+                { accountNumber: regex },
+            ]
 
+        }
         if (!userId) {
             return validationError(res, "User is not Valid Contact admin Support");
         }
-        const accounts = await BankAccount.find({userId}).limit(limit).skip(offset * limit).sort({createdAt:-1});
-        console.log(accounts);
-        if (!accounts) {
+        const accounts = await BankAccount.find({ userId })
+            .limit(limit)
+            .skip(offset * limit)
+            .sort({ createdAt: -1 });
+        if (accounts.length === 0) {
             return validationError(res, "No Bank Accounts found Please Add One ");
         }
         return successResponse(res, "Accounts Fetched Successfully", accounts);
@@ -62,22 +82,22 @@ const getAccounts = async (req: Request, res: Response) => {
 }
 
 
-const getAccount = async(req:Request, res:Response)=>{
-    try{
-        const bankId= req.params.id;
+const getAccount = async (req: Request, res: Response) => {
+    try {
+        const bankId = req.params.id;
         const userId = utilsHelper.getUserId(req);
-        if(!userId){
+        if (!userId) {
             return validationError(res, "User is not Valid Contact admin Support");
         }
-        if(!bankId){
+        if (!bankId) {
             return notFoundResponse(res, "Account ID is required");
         }
         const account = await BankAccount.findById(bankId);
-        if(!account){
+        if (!account) {
             return notFoundResponse(res, "Account Not Found");
         }
         return successResponse(res, "Account Found Successfully", account);
-    }catch(error:any){
+    } catch (error: any) {
         return errorResponse(res, error.message)
     }
 }
