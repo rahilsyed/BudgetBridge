@@ -1,5 +1,5 @@
 import  mongoose, {Schema} from "mongoose";
-import { IBankAccount } from "../interfaces/bankAccount.interface";
+import { IBankAccount } from "../interfaces/bankAccount";
 
 
 

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import utils from '../helpers/utils.helper';
-import { errorResponse, notFoundResponse, successResponse, validationError } from '../helpers/api_response.helper';
-import Expense from '../models/expense.model';
-import User from '../models/user.model';
+import utils from '../helpers/utils';
+import { errorResponse, notFoundResponse, successResponse, validationError } from '../helpers/api_response';
+import Expense from '../models/expense';
+import User from '../models/user';
 import xlsx from 'xlsx';
 const addExpense = async (req: Request, res: Response) => {
   const { amount, source, icon, date } = req.body;

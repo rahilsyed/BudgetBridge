@@ -1,10 +1,10 @@
 import express, { Request, Response, NextFunction } from 'express';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
-import connectToDB from './config/db.config';
-import logging from './config/logging.config';
+import connectToDB from './config/db';
+import logging from './config/logging';
 import dotenv from 'dotenv';
-import apiRouter from './routes/api.routes';
+import apiRouter from './routes/api';
 dotenv.config();
 const app = express();
 

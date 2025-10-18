@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { authenticate } from "../middleware/authenticate.middleware";
-import bankAccountController from "../controllers/bankAccount.controller";
+import { authenticate } from "../middleware/authenticate";
+import bankAccountController from "../controllers/bankAccount";
 const router = Router();
 
 router.get('/get',authenticate , bankAccountController.getAccounts );

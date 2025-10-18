@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import incomeController from '../controllers/income.controller';
-import { authenticate } from '../middleware/authenticate.middleware';
+import incomeController from '../controllers/income';
+import { authenticate } from '../middleware/authenticate';
 const   router = Router();
 
 router.post('/add-income', authenticate ,incomeController.addIncome );

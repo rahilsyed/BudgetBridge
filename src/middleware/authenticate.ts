@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import { unauthorizedResponse, validationError } from '../helpers/api_response.helper';
+import { unauthorizedResponse, validationError } from '../helpers/api_response';
 dotenv.config();
 
 const secret = process.env.JWT_SECRET!;

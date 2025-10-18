@@ -6,7 +6,7 @@ import cloudinary from 'cloudinary';
 import path from 'path';
 import ejs from 'ejs';
 import fs from 'fs';
-import { User } from '../types/user.types';
+import { User } from '../types/user';
 dotenv.config();
 
 const secret_key = process.env.JWT_SECRET!;

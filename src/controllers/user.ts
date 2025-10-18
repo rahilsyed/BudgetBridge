@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import utils from '../helpers/utils.helper';
+import utils from '../helpers/utils';
 import { Request, Response } from 'express';
 import { UploadedFile } from 'express-fileupload';
 import {
@@ -8,9 +8,9 @@ import {
   successResponse,
   validationError,
   notFoundResponse,
-} from '../helpers/api_response.helper';
-import User from '../models/user.model';
-import { WelcomeEmailData } from '../types/user.types';
+} from '../helpers/api_response';
+import User from '../models/user';
+import { WelcomeEmailData } from '../types/user';
 
 const register = async (req: Request, res: Response) => {
   const { firstName, lastName, email, phone } = req.body;

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import userController from '../controllers/user.controller';
-import { authenticate } from '../middleware/authenticate.middleware';
+import userController from '../controllers/user';
+import { authenticate } from '../middleware/authenticate';
 const router = Router();
 
 router.post('/register', userController.register);

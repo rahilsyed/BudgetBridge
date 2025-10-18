@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 import dotenv from "dotenv";
-import logging from "./logging.config"
+import logging from "./logging"
 dotenv.config();
 
 const MONGO_URL: string = process.env.DATABASE_URL!;  // here "!" is non null assertion operator which tell typescript trustme the Value is not null

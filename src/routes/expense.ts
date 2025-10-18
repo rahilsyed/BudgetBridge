@@ -1,6 +1,6 @@
 import {Router} from 'express';
-import expenseController from "../controllers/expense.controller";
-import { authenticate } from '../middleware/authenticate.middleware';
+import expenseController from "../controllers/expense";
+import { authenticate } from '../middleware/authenticate';
 
 
 

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { errorResponse, notFoundResponse, successResponse, validationError } from "../helpers/api_response.helper";
-import utilsHelper from "../helpers/utils.helper";
-import BankAccount from "../models/bankAccount.model";
+import { errorResponse, notFoundResponse, successResponse, validationError } from "../helpers/api_response";
+import utilsHelper from "../helpers/utils";
+import BankAccount from "../models/bankAccount";
 
 
 //  _id:ObjectId;

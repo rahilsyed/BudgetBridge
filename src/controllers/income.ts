@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
-import Income from '../models/income.model';
-import utils from '../helpers/utils.helper';
+import Income from '../models/income';
+import utils from '../helpers/utils';
 import {
   errorResponse,
   notFoundResponse,
   successResponse,
   validationError,
-} from '../helpers/api_response.helper';
+} from '../helpers/api_response';
 import xlsx from 'xlsx';
-import BankAccount from '../models/bankAccount.model';
+import BankAccount from '../models/bankAccount';
 const addIncome = async (req: Request, res: Response) => {
   const { icon, source, amount, date, bankAccountId, description, incomeType } = req.body;
   try {
