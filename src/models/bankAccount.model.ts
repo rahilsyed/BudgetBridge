@@ -5,7 +5,7 @@ import { IBankAccount } from "../interfaces/bankAccount.interface";
 
 const bankAccountSchema :Schema<IBankAccount> = new Schema<IBankAccount>({
     accountNumber:{
-        type: Number,
+        type: String,
         required: true,
         minLength:4,
         maxLength:4,
