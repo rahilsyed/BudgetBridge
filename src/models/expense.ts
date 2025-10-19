@@ -17,7 +17,7 @@ const expenseSchema: Schema<IExpense> = new Schema({
     },
     source: {
         type: String,
-        required: true
+       
     },
     date: {
         type: Date,
@@ -34,11 +34,11 @@ const expenseSchema: Schema<IExpense> = new Schema({
     },
     paymentMethod: {
         type: String,
-        required: true
+        
     },
     category: {
         type: String,
-        required: true
+       
     }
 }, {
     timestamps: true,
