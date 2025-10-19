@@ -17,7 +17,7 @@ const bankAccountSchema :Schema<IBankAccount> = new Schema<IBankAccount>({
     },
     accountType:{
         type: String,
-        enum: ['Savings', 'Current', 'Salary'],
+        enum: ['Savings', 'Current', 'Salary', 'Cash'],
         required: true
     },
     bankName:{

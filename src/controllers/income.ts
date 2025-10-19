@@ -96,7 +96,7 @@ const deleteIncome = async (req: Request, res: Response) => {
 
     const deletedIncome = await Income.findByIdAndUpdate(
       incomeId,
-      { $set: { isDeleted: true } }, // ensure matches schema
+      { $set: { isDeleted: true } },
       { new: true }
     );
  

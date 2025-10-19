@@ -48,8 +48,20 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+app.get('/',(req:Request, res:Response)=>{
+   logging.info(
+      NAMESPACE,
+      `METHOD: [${req.method}] - URL: [${req.url}] - STATUS: [${res.statusCode}] - IP: [${req.socket.remoteAddress}]`
+    );
+  res.redirect('/health')
+});
+
+app.get('/health',(req:Request, res:Response)=>{
+  
+  res.send(`api is working fine ${req.socket.remoteAddress}`)
+})
 app.use('/api', apiRouter);
 
 app.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
+  console.log(`Server running on port http://localhost:${process.env.PORT}`);
 });
