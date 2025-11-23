@@ -17,10 +17,10 @@ const NAMESPACE = 'Server';
 (0, db_1.default)();
 app.set('view engine', 'ejs');
 app.use((0, cors_1.default)({
-    origin: 'http://localhost:5173', // your frontend port
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true, // if you're using cookies or auth headers
+    credentials: true,
 }));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -41,12 +41,11 @@ app.use((req, res, next) => {
     next();
 });
 app.get('/', (req, res) => {
-    console.log(req.socket.remoteAddress);
+    logging_1.default.info(NAMESPACE, `METHOD: [${req.method}] - URL: [${req.url}] - STATUS: [${res.statusCode}] - IP: [${req.socket.remoteAddress}]`);
     res.redirect('/health');
 });
 app.get('/health', (req, res) => {
-    console.log(req.socket.remoteAddress);
-    res.send("api is working fine");
+    res.send(`api is working fine ${req.socket.remoteAddress}`);
 });
 app.use('/api', api_1.default);
 app.listen(process.env.PORT, () => {
