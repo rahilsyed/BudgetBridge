@@ -8,4 +8,5 @@ export default interface IUser{
     password: string;
     phone: string;
     imgUrl: string;
+    isDeleted: Boolean;
 }

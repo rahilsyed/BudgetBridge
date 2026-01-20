@@ -1,3 +1,5 @@
+import { ObjectId } from "mongoose";
+
 export type User = {
   _id?: string;
   companyId?: string;
@@ -13,4 +15,16 @@ export type WelcomeEmailData = {
   lastName: string;
   email: string;
   password: string;
+};
+export type FilterOptions = {
+  _id?: ObjectId | { $ne: ObjectId };
+  firstName?: { $regex: RegExp };
+  $or?: [
+    {
+      firstName?: { $regex: RegExp };
+    },
+    {
+      lastName?: { $regex: RegExp };
+    },
+  ];
 };

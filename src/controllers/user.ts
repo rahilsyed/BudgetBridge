@@ -11,6 +11,8 @@ import {
 } from '../helpers/api_response';
 import User from '../models/user';
 import { WelcomeEmailData } from '../types/user';
+import { userOverallPipeline } from '../query/user';
+import userServices from '../services/user';
 
 const register = async (req: Request, res: Response) => {
   const { firstName, lastName, email, phone } = req.body;
@@ -126,6 +128,37 @@ const getUserInfo = async (req: Request, res: Response) => {
   }
 };
 
+// const userOverAllData = async (req: Request, res: Response) => {
+//   try {
+//     const userId = utils.getUserId(req);
+
+//     if (!userId) {
+//       return unauthorizedResponse(res, 'User not authenticated');
+//     }
+
+//     const data = await User.aggregate(
+//       userOverallPipeline(userId)
+//     );
+
+//     return successResponse(
+//       res,
+//       'User overall data fetched successfully',
+//       data[0]
+//     );
+//   } catch (error: any) {
+//     return errorResponse(res, error.message);
+//   }
+// };
+
+const dashboard = async(req:Request, res:Response)=>{
+  try{
+    const userId = utils.getUserId(req);
+    const data = await userServices.getUserDashBoardCardData(userId)
+    return successResponse(res,"fetchefd", data)
+  }catch(error){
+    return errorResponse(res,error.message )
+  }
+}
 const forgetPassword = async (req: Request, res: Response) => {
   const { email } = req.body;
   try {
@@ -163,4 +196,6 @@ export default {
   getUserInfo,
   resetPassword,
   forgetPassword,
+  dashboard
 };
+
