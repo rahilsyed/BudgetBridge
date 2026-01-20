@@ -11,7 +11,6 @@ import {
 } from '../helpers/api_response';
 import User from '../models/user';
 import { WelcomeEmailData } from '../types/user';
-import { userOverallPipeline } from '../query/user';
 import userServices from '../services/user';
 
 const register = async (req: Request, res: Response) => {
