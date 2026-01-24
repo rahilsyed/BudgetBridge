@@ -1,7 +1,9 @@
 import mongoose from "mongoose"
 import dotenv from "dotenv";
-import logging from "./logging"
 dotenv.config();
+import logging from "./logging"
+
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
 
 console.log("DATABASE_URL:", process.env.DATABASE_URL);
 

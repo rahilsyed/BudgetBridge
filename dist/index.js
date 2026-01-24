@@ -12,6 +12,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const api_1 = __importDefault(require("./routes/api"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
 const NAMESPACE = 'Server';
 //Database connection
 (0, db_1.default)();

@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 import apiRouter from './routes/api';
 dotenv.config();
 const app = express();
-
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
 const NAMESPACE: string = 'Server';
 
 //Database connection

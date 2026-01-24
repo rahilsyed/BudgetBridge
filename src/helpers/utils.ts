@@ -94,11 +94,17 @@ const getCurrentISTDate = () => {
   const istTime = new Date(nowUTC.getTime() + ISTOffset * 60000);
   return istTime;
 };
+
+const urlTransporter = (url : String)=>{
+  return url.toString();
+}
+
 export default {
   getUserId,
   generateToken,
   sendEmail,
   generatePassword,
   uploadToCloudinary,
-  getCurrentISTDate
+  getCurrentISTDate,
+  urlTransporter
 };
