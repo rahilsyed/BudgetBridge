@@ -12,7 +12,7 @@ const bankAccountSchema :Schema<IBankAccount> = new Schema<IBankAccount>({
     },
     userId:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:"user",
+        ref:"users",
         required: true,
     },
     accountType:{
@@ -36,6 +36,10 @@ const bankAccountSchema :Schema<IBankAccount> = new Schema<IBankAccount>({
         type: Number,
         default: 0
     },
+    isDeleted:{
+        type : Boolean,
+        default: false
+    }
 },{
     timestamps:true,
     collection: 'bankAccounts'

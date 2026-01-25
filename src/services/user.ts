@@ -3,8 +3,8 @@ import { userOverallPipeline } from "../query/user";
 
 
 
-const getUserDashBoardCardData = async (userId: string) => {
-    const result = await User.aggregate(userOverallPipeline(userId));
+const getUserDashBoardCardData = async (userId: any) => {
+    const result = await User.aggregate(userOverallPipeline(userId) as []);
     return result[0];
 }
 
