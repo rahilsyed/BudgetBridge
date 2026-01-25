@@ -148,7 +148,7 @@ const deleteAccount = async (req: Request, res: Response) => {
 const editAccount = async (req: Request, res: Response) => {
     try {
         const {userId}= utilsHelper.getUserId(req);
-        const 
+        
         if(!userId){
             return validationError(res, 'Missing required Fields')
         }
