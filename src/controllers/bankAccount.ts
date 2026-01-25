@@ -5,17 +5,21 @@ import BankAccount from "../models/bankAccount";
 import Income from "../models/income";
 import Expense from "../models/expense";
 
+
 const addAccount = async (req: Request, res: Response) => {
     try {
         const { bankName, accountType, accountNumber, balance } = req.body;
         if (!bankName || !accountType || !accountNumber) {
             return validationError(res, "Missing Required Fields");
         }
+        if (balance < 0) {
+            return validationError(res, "Balance cannot be Negitive")
+        }
         const userId = utilsHelper.getUserId(req);
         if (!userId) {
-            validationError(res, "User is not Valid Contact admin Support");
+            return validationError(res, "User is not Valid Contact admin Support");
         }
-         await BankAccount.findOneAndUpdate({ userId, isPrimary: true }, {
+        await BankAccount.findOneAndUpdate({ userId, isPrimary: true, isDeleted: { $ne: true } }, {
             $set: { isPrimary: false }
         })
         const newAccount = new BankAccount({
@@ -35,7 +39,7 @@ const addAccount = async (req: Request, res: Response) => {
             bankAccountId: newAccount._id,
             incomeType: "New account Opened",
             description: `Opened a new bank account`,
-            date:  Date.now(),
+            date: Date.now(),
         })
         await addAmount.save();
         return successResponse(res, "Account Added Successfully", newAccount);
@@ -99,7 +103,11 @@ const getAccount = async (req: Request, res: Response) => {
         if (!bankId) {
             return notFoundResponse(res, "Account ID is required");
         }
-        const account = await BankAccount.findById(bankId);
+        const account = await BankAccount.findOne({
+            _id: bankId,
+            userId,
+            isDeleted: { $ne: true }
+        });
         if (!account) {
             return notFoundResponse(res, "Account Not Found");
         }
@@ -120,7 +128,7 @@ const deleteAccount = async (req: Request, res: Response) => {
         if (!bankAccountId) {
             return validationError(res, 'Missing required fields');
         }
-        const bankAccountExists = await BankAccount.findById(bankAccountId)
+        const bankAccountExists = await BankAccount.findOne({ _id: bankAccountId, userId, isDeleted: { $ne: true } })
         if (!bankAccountExists) {
             return notFoundResponse(res, "bank account not found")
         }
@@ -133,10 +141,10 @@ const deleteAccount = async (req: Request, res: Response) => {
         }
         const createExpense = new Expense({
             userId,
-            amount : data.balance,
-            source:"Bank Account Deleted",
+            amount: data.balance,
+            source: "Bank Account Deleted",
             bankAccountId,
-            description :"Bank Account Deleted",
+            description: "Bank Account Deleted",
             date: Date.now(),
         });
         await createExpense.save();
@@ -146,16 +154,79 @@ const deleteAccount = async (req: Request, res: Response) => {
     }
 }
 const editAccount = async (req: Request, res: Response) => {
-    try {
-        const {userId}= utilsHelper.getUserId(req);
-        
-        if(!userId){
-            return validationError(res, 'Missing required Fields')
-        }
-    } catch (error) {
-        
+  try {
+    const userId = utilsHelper.getUserId(req);
+    const { bankName, accountType, accountNumber, balance, bankAccountId } = req.body;
+
+    if (!userId) {
+      return validationError(res, "User not found");
     }
-}
+
+    if (!bankAccountId) {
+      return validationError(res, "Bank account ID is required");
+    }
+
+    const bankAccount = await BankAccount.findOne({
+      _id: bankAccountId,
+      userId,
+      isDeleted: { $ne: true }
+    });
+
+    if (!bankAccount) {
+      return notFoundResponse(res, "Bank account not found");
+    }
+
+   
+    if (balance !== undefined && balance !== bankAccount.balance) {
+      if (balance < 0) {
+        return validationError(res, "Balance cannot be negative");
+      }
+
+        const newBalance = Number(balance);
+        const oldBalance = Number(bankAccount.balance);
+
+        const diff = newBalance - oldBalance;
+
+
+      if (diff > 0) {
+        await Income.create({
+          userId,
+          source: "Bank Account Edited",
+          amount: diff,
+          bankAccountId,
+          incomeType: "Balance Adjustment",
+          description: "Bank account balance increased",
+          date: Date.now(),
+        });
+      }
+
+      if (diff < 0) {
+        await Expense.create({
+          userId,
+          amount: Math.abs(diff),
+          source: "Bank Account Edited",
+          bankAccountId,
+          description: "Bank account balance decreased",
+          date: Date.now(),
+        });
+      }
+    }
+
+    const updateData: any = { bankName, accountType, accountNumber };
+    if (balance !== undefined) updateData.balance = balance;
+
+    const result = await BankAccount.findByIdAndUpdate(
+      bankAccountId,
+      updateData,
+      { new: true }
+    );
+
+    return successResponse(res, "Bank account updated successfully", result);
+  } catch (error: any) {
+    return errorResponse(res, error.message);
+  }
+};
+
 export default {
     addAccount,
     getAccounts,
