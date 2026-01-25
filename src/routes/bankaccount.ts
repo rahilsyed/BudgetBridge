@@ -6,7 +6,8 @@ const router = Router();
 router.get('/get',authenticate , bankAccountController.getAccounts );
 router.get('/get/:id',authenticate , bankAccountController.getAccount );
 router.post('/add', authenticate , bankAccountController.addAccount );
-router.put('/update', authenticate);
+router.put('/update', authenticate,bankAccountController.editAccount);
+router.put('/delete', authenticate,bankAccountController.deleteAccount);
 
 
 export default router;

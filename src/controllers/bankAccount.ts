@@ -2,16 +2,8 @@ import { Request, Response } from "express";
 import { errorResponse, notFoundResponse, successResponse, validationError } from "../helpers/api_response";
 import utilsHelper from "../helpers/utils";
 import BankAccount from "../models/bankAccount";
-
-
-//  _id:ObjectId;
-//     userId: ObjectId;
-//     bankName: String;
-//     accountType: String;
-//     balance: Number;
-//     accountNumber: Number;
-//     isPrimary: Boolean;
-//     isActive:Boolean;
+import Income from "../models/income";
+import Expense from "../models/expense";
 
 const addAccount = async (req: Request, res: Response) => {
     try {
@@ -23,10 +15,9 @@ const addAccount = async (req: Request, res: Response) => {
         if (!userId) {
             validationError(res, "User is not Valid Contact admin Support");
         }
-        const doHaveAccount = await BankAccount.findOneAndUpdate({ userId, isPrimary: true }, {
+         await BankAccount.findOneAndUpdate({ userId, isPrimary: true }, {
             $set: { isPrimary: false }
         })
-        console.log(doHaveAccount)
         const newAccount = new BankAccount({
             userId,
             bankName,
@@ -37,7 +28,16 @@ const addAccount = async (req: Request, res: Response) => {
             isActive: true
         });
         await newAccount.save();
-
+        const addAmount = new Income({
+            userId,
+            source: "Bank Account Added",
+            amount: balance,
+            bankAccountId: newAccount._id,
+            incomeType: "New account Opened",
+            description: `Opened a new bank account`,
+            date:  Date.now(),
+        })
+        await addAmount.save();
         return successResponse(res, "Account Added Successfully", newAccount);
     } catch (error: any) {
         return errorResponse(res, error.message)
@@ -108,8 +108,58 @@ const getAccount = async (req: Request, res: Response) => {
         return errorResponse(res, error.message)
     }
 }
+
+const deleteAccount = async (req: Request, res: Response) => {
+    try {
+        const userId = await utilsHelper.getUserId(req);
+        const { bankAccountId } = req.body;
+        if (!userId) {
+            return validationError(res, 'User not Found ')
+        }
+
+        if (!bankAccountId) {
+            return validationError(res, 'Missing required fields');
+        }
+        const bankAccountExists = await BankAccount.findById(bankAccountId)
+        if (!bankAccountExists) {
+            return notFoundResponse(res, "bank account not found")
+        }
+        const data = await BankAccount.findByIdAndUpdate(
+            bankAccountId,
+            { $set: { isDeleted: true } },
+            { new: true });
+        if (!data) {
+            return validationError(res, 'This bank accounts does not exists')
+        }
+        const createExpense = new Expense({
+            userId,
+            amount : data.balance,
+            source:"Bank Account Deleted",
+            bankAccountId,
+            description :"Bank Account Deleted",
+            date: Date.now(),
+        });
+        await createExpense.save();
+        return successResponse(res, "BankAccount Deleted Successfully", data)
+    } catch (error) {
+        return errorResponse(res, error.message)
+    }
+}
+const editAccount = async (req: Request, res: Response) => {
+    try {
+        const {userId}= utilsHelper.getUserId(req);
+        const 
+        if(!userId){
+            return validationError(res, 'Missing required Fields')
+        }
+    } catch (error) {
+        
+    }
+}
 export default {
     addAccount,
     getAccounts,
-    getAccount
+    getAccount,
+    deleteAccount,
+    editAccount
 }

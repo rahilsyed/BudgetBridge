@@ -10,4 +10,5 @@ export interface IBankAccount{
     accountNumber: String;
     isPrimary: Boolean;
     isActive:Boolean;
+    isDeleted:Boolean;
 }
