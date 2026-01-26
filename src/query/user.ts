@@ -173,6 +173,54 @@ export const userOverallPipeline = (userId: string) => {
                 ],
                 'as': 'recentExpense'
             }
+        },
+        {
+            '$lookup': {
+                'from': 'expense',
+                'let': {
+                    'userId': '$_id',
+                    'startOfMonth': {
+                        '$dateTrunc': {
+                            'date': '$$NOW',
+                            'unit': 'month'
+                        }
+                    }
+                },
+                'pipeline': [
+                    {
+                        '$match': {
+                            '$expr': {
+                                '$and': [
+                                    {
+                                        '$eq': [
+                                            '$userId', '$$userId'
+                                        ]
+                                    }, {
+                                        '$ne': [
+                                            '$isDeleted', true
+                                        ]
+                                    }, {
+                                        '$gte': [
+                                            '$createdAt', '$$startOfMonth'
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }, {
+                        '$sort': {
+                            'createdAt': -1
+                        }
+                    }
+                ],
+                'as': 'monthlyExpenses'
+            }
+        }, {
+            '$addFields': {
+                'monthlyExpenses': {
+                    '$sum': '$monthlyExpenses.amount'
+                }
+            }
         }
     ]
 };
