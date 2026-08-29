@@ -3,12 +3,12 @@ import userRouter from "./user";
 import incomeRouter from "./income";
 import expenseRouter from "./expense";
 import bankAccountRouter from "./bankaccount";
-
+import ipoRouter from "./ipo";
 const router = Router();
 
 router.use("/user", userRouter);
 router.use("/income", incomeRouter);
 router.use("/expense", expenseRouter);
 router.use("/bankaccount", bankAccountRouter);
-
+router.use("/ipo", ipoRouter);
 export default router;

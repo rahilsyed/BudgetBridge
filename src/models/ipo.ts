@@ -11,8 +11,12 @@ const ipoSchema: Schema<IIpo> = new Schema({
         ref:'users',
         required:'true'
     },
+    isAlloted:{
+        type: Boolean,
+        default: false
+    },
     price: {
-        type: String,
+        type: Number,
         required: true
     },
     numberOfShares: {
@@ -23,14 +27,14 @@ const ipoSchema: Schema<IIpo> = new Schema({
         type: String,
     },
     listingDate: {
-        type: Date,
+        type: String,
     },
     isApplied: {
         type: Boolean,
         default: false,
     },
     fundsReleaseDate: {
-        type: Date,
+        type: String,
     },
     bankAccountId:{
         type: Schema.Types.ObjectId,

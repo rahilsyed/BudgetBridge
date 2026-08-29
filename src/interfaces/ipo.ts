@@ -3,13 +3,13 @@ import { ObjectId } from 'mongoose';
 export default interface IIpo {
     _id:ObjectId;
     listingName:string;
-    price : string;
+    price : number;
     numberOfShares: number;
     userId:ObjectId;
     expectedGMP:string;
-    listingDate?: Date;
+    listingDate?: string;
     isApplied: boolean;
     bankAccountId:ObjectId;
-    fundsReleaseDate?: Date;
+    fundsReleaseDate?: string;
     isAlloted:boolean;
 }
