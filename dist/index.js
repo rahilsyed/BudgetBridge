@@ -17,11 +17,24 @@ const NAMESPACE = 'Server';
 //Database connection
 (0, db_1.default)();
 app.set('view engine', 'ejs');
+const allowedOrigins = [
+    'http://localhost:5173',
+    'https://budgetbridge.netlify.app'
+];
 app.use((0, cors_1.default)({
-    origin: 'http://localhost:5173',
+    origin: function (origin, callback) {
+        // allow requests with no origin (like Postman)
+        if (!origin)
+            return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
+    credentials: true
 }));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));

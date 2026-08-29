@@ -17,7 +17,7 @@ const bankAccountSchema :Schema<IBankAccount> = new Schema<IBankAccount>({
     },
     accountType:{
         type: String,
-        enum: ['Savings', 'Current', 'Salary', 'Cash'],
+        enum: ['Savings', 'Current', 'Salary'],
         required: true
     },
     bankName:{
@@ -33,6 +33,10 @@ const bankAccountSchema :Schema<IBankAccount> = new Schema<IBankAccount>({
         default: true
     },
     balance:{
+        type: Number,
+        default: 0
+    },
+    blockedBalance:{
         type: Number,
         default: 0
     },

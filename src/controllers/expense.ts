@@ -17,8 +17,9 @@ const addExpense = async (req: Request, res: Response) => {
     if (!userExists) {
       return validationError(res, 'User does not exists in database');
     }
-
-    if (!amount || !description || !bankAccountId) {
+    const primaryAccountOfUser = await BankAccount.findOne({userId,isPrimary:true})
+    const expenseAccountId = bankAccountId  ? bankAccountId : primaryAccountOfUser?._id;
+    if (!amount || !description || !expenseAccountId) {
       return validationError(res, 'Missing Required Fields ');
     }
 
@@ -28,7 +29,7 @@ const addExpense = async (req: Request, res: Response) => {
       userId,
       amount,
       source,
-      bankAccountId,
+      bankAccountId:expenseAccountId,
       icon,
       description,
       paymentMethod,
