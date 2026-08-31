@@ -19,6 +19,7 @@ const NAMESPACE = 'Server';
 app.set('view engine', 'ejs');
 const allowedOrigins = [
     'http://localhost:5173',
+    'http://localhost:5174',
     'https://budgetbridge.netlify.app'
 ];
 app.use((0, cors_1.default)({

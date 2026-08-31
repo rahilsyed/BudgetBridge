@@ -110,7 +110,7 @@ const resetPassword = async (req: Request, res: Response) => {
       { $set: { password: encryptedPassword } }
     );
     return successResponse(res, 'Password reset Successfully', null);
-  } catch (error) {
+  } catch (error:any) {
     return errorResponse(res, error.message);
   }
 };
@@ -127,6 +127,47 @@ const getUserInfo = async (req: Request, res: Response) => {
   }
 };
 
+const initialResetPassword = async (req: Request, res: Response) => {
+  try {
+    const userId = utils.getUserId(req);
+    const { newPassword } = req.body;
+
+    if (!newPassword || !userId) {
+      return validationError(res, 'Missing required field');
+    }
+
+    const userExists = await User.findById(userId);
+
+    if (!userExists) {
+      return validationError(res, 'User Not Found');
+    }
+
+    const hashNewPassword = await bcrypt.hash(newPassword, 10);
+
+    console.log("newPassword:", newPassword);
+    console.log("hashNewPassword:", hashNewPassword);
+    console.log("typeof hashNewPassword:", typeof hashNewPassword);
+
+    await User.findByIdAndUpdate(
+      userExists._id,
+      {
+        $set: {
+          password: hashNewPassword
+        }
+      },
+      { new: true }
+    );
+
+    return successResponse(
+      res,
+      "New Password Updated Successfully",
+      null
+    );
+  } catch (error: any) {
+    console.error("RESET PASSWORD ERROR:", error);
+    return errorResponse(res, error.message);
+  }
+};
 // const userOverAllData = async (req: Request, res: Response) => {
 //   try {
 //     const userId = utils.getUserId(req);
@@ -154,7 +195,7 @@ const dashboard = async(req:Request, res:Response)=>{
     const userId = utils.getUserId(req);
     const data = await userServices.getUserDashBoardCardData(userId)
     return successResponse(res,"fetchefd", data)
-  }catch(error){
+  }catch(error: any){
     return errorResponse(res,error.message )
   }
 }
@@ -194,6 +235,7 @@ export default {
   login,
   getUserInfo,
   resetPassword,
+  initialResetPassword,
   forgetPassword,
   dashboard
 };
